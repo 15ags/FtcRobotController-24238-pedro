@@ -35,11 +35,13 @@ public class Constants {
             .rightFrontEncoderDirection(Encoder.REVERSE)
             .rightRearEncoderDirection(Encoder.FORWARD);
 
+
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
+                .mecanumDrivetrain(driveConstants)
                 .pathConstraints(pathConstraints)
                 .driveEncoderLocalizer(localizerConstants)
                 .build();
