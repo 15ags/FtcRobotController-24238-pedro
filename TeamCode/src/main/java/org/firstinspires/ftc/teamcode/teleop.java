@@ -62,8 +62,6 @@ public class teleop extends OpMode
     private DcMotorEx LFMotor = null;
     private DcMotorEx RFMotor = null;
 
-    // The motors for the ball throwing bloody thing
-    // TODO: Read documentation to change to ideal motor for speed
     private DcMotorEx pickUp = null;
     private DcMotorEx inter = null;
 
@@ -174,7 +172,7 @@ public class teleop extends OpMode
         // Scale to your desired maximum velocity
         // This is now your actual max speed
 
-        double maxLaunchVelocity = 1600;
+        double maxLaunchVelocity = 1700;
 
         double targetVelocity = pelvisInput * maxLaunchVelocity;
 
@@ -183,8 +181,6 @@ public class teleop extends OpMode
         //double strafe = gamepad1.left_stick_x;
         double twist = gamepad1.right_stick_x;
         double BasePower = 2500;
-
-        // TODO: Set up classes for everything
 
         double LFPower = Range.clip(drive + strafe + twist, -1.0, 1.0);
         double RFPower = Range.clip(drive - strafe - twist, -1.0, 1.0);
