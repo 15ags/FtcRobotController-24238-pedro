@@ -68,6 +68,9 @@ public class teleop extends OpMode
     // You are not allowed to judge I am sleep deprived
     private DcMotorEx rightPelvis = null;
     private DcMotorEx leftPelvis = null;
+
+    private int hondoTarget = 0;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -164,15 +167,14 @@ public class teleop extends OpMode
         // Setup a variable for each drive wheel to save power level for telemetry
 
         double inVel = 2000;
-        double interVel = 1250;
+        double interVel = 1000;
         double pelvisInput = gamepad2.left_stick_y;
         double intakePower = (gamepad2.right_trigger-gamepad2.right_stick_y)*inVel;
         double interTarget = (gamepad2.left_trigger-gamepad2.right_stick_y)*interVel;
-
         // Scale to your desired maximum velocity
         // This is now your actual max speed
 
-        double maxLaunchVelocity = 1700;
+        double maxLaunchVelocity = 1800;
 
         double targetVelocity = pelvisInput * maxLaunchVelocity;
 
