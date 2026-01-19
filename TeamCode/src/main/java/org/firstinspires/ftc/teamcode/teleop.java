@@ -30,6 +30,7 @@ package org.firstinspires.ftc.teamcode;
  */
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -52,7 +53,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Jag", group="Iterative OpMode")
+@TeleOp(name="teleop", group="Iterative OpMode")
 public class teleop extends OpMode
 {
     // Declare OpMode members.
@@ -62,15 +63,14 @@ public class teleop extends OpMode
     private DcMotorEx LFMotor = null;
     private DcMotorEx RFMotor = null;
 
-    private DcMotorEx pickUp = null;
-    private DcMotorEx inter = null;
+    // The motors for the ball throwing bloody thing
+    // TODO: Read documentation to change to ideal motor for speed
+    private DcMotorEx intake = null;
+
 
     // You are not allowed to judge I am sleep deprived
-    private DcMotorEx rightPelvis = null;
-    private DcMotorEx leftPelvis = null;
-
-    private int hondoTarget = 0;
-
+    private DcMotorEx Launch = null;
+    private DcMotorEx middle = null;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -87,10 +87,10 @@ public class teleop extends OpMode
         RFMotor  = hardwareMap.get(DcMotorEx.class, "RFMotor");
 
         // Initializing the Motors to the correct entry
-        pickUp = hardwareMap.get(DcMotorEx.class,"pickUp");
-        rightPelvis = hardwareMap.get(DcMotorEx.class, "rightPelvis");
-        leftPelvis = hardwareMap.get(DcMotorEx.class, "leftPelvis");
-        inter = hardwareMap.get(DcMotorEx.class, "launch");
+        intake = hardwareMap.get(DcMotorEx.class,"intake");
+        Launch = hardwareMap.get(DcMotorEx.class, "Launch");
+        middle = hardwareMap.get(DcMotorEx.class, "middle");
+
 
 
 
@@ -99,29 +99,26 @@ public class teleop extends OpMode
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         LBMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        RBMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        LFMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        RFMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        RBMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        LFMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        RFMotor.setDirection(DcMotorEx.Direction.FORWARD);
 
         // Directions for the throwing motors
-        leftPelvis.setDirection(DcMotorEx.Direction.FORWARD);
-        rightPelvis.setDirection(DcMotorEx.Direction.REVERSE);
+        middle.setDirection(DcMotorEx.Direction.FORWARD);
+        Launch.setDirection(DcMotorEx.Direction.FORWARD);
+        intake.setDirection(DcMotorEx.Direction.FORWARD);
 
-        pickUp.setDirection(DcMotorEx.Direction.FORWARD);
-        pickUp.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        pickUp.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        pickUp.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        leftPelvis.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        rightPelvis.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        leftPelvis.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rightPelvis.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        leftPelvis.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        rightPelvis.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        inter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        inter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        inter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        inter.setDirection(DcMotorSimple.Direction.REVERSE);
+        middle.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        Launch.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        middle.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        Launch.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        middle.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        Launch.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        intake.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        intake.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        intake.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         LBMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         LFMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -134,9 +131,12 @@ public class teleop extends OpMode
         RFMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         LBMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        RBMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         LFMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        RBMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         RFMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+
+
 
 
 
@@ -166,23 +166,24 @@ public class teleop extends OpMode
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
 
-        double inVel = 2000;
-        double interVel = 1000;
         double pelvisInput = gamepad2.left_stick_y;
-        double intakePower = (gamepad2.right_trigger-gamepad2.right_stick_y)*inVel;
-        double interTarget = (gamepad2.left_trigger-gamepad2.right_stick_y)*interVel;
+        double middleP = gamepad2.right_stick_y;
+        double inin = gamepad2.right_trigger-gamepad2.left_trigger;
+        // double intakePower = gamepad2.left_trigger-gamepad2.right_trigger;
+
         // Scale to your desired maximum velocity
+        double intakeV = inin*2500;
         // This is now your actual max speed
-
-        double maxLaunchVelocity = 1800;
-
-        double targetVelocity = pelvisInput * maxLaunchVelocity;
+        double maxLaunchVelocity = 1050;
+        double targetVelocity = pelvisInput;
 
         double drive = -gamepad1.left_stick_y;
         double strafe = gamepad1.right_trigger - gamepad1.left_trigger;
         //double strafe = gamepad1.left_stick_x;
         double twist = gamepad1.right_stick_x;
         double BasePower = 2500;
+
+        // TODO: Set up classes for everything
 
         double LFPower = Range.clip(drive + strafe + twist, -1.0, 1.0);
         double RFPower = Range.clip(drive - strafe - twist, -1.0, 1.0);
@@ -194,10 +195,9 @@ public class teleop extends OpMode
         LBMotor.setVelocity(LBPower*BasePower);
         RBMotor.setVelocity(RBPower*BasePower);
 
-        leftPelvis.setVelocity(targetVelocity);
-        rightPelvis.setVelocity(targetVelocity);
-        inter.setVelocity(interTarget);
-        pickUp.setVelocity(intakePower);
+        middle.setPower(middleP);
+        Launch.setPower(targetVelocity);
+        intake.setVelocity(intakeV);
 
 
         // Show the elapsed game time and wheel power.
