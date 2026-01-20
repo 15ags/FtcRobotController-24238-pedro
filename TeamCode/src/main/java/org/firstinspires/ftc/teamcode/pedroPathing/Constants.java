@@ -51,7 +51,7 @@ public class Constants {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .mecanumDrivetrain(driveConstants)
                 .pathConstraints(pathConstraints)
-                .(localizerConstants)
+                .threeWheelIMULocalizer(localizerConstants)
                 .build();
     }
 }
