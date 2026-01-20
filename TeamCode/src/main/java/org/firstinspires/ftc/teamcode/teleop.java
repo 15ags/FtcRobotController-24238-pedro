@@ -189,10 +189,10 @@ public class teleop extends OpMode
         double LBPower = Range.clip(drive - strafe + twist, -1.0, 1.0);
         double RBPower = Range.clip(drive + strafe - twist, -1.0, 1.0);
 
-        LFMotor.setVelocity(LFPower);
-        RFMotor.setVelocity(RFPower);
-        LBMotor.setVelocity(LBPower);
-        RBMotor.setVelocity(RBPower);
+        LFMotor.setPower(LFPower);
+        RFMotor.setPower(RFPower);
+        LBMotor.setPower(LBPower);
+        RBMotor.setPower(RBPower);
 
         leftPelvis.setVelocity(targetVelocity);
         rightPelvis.setVelocity(targetVelocity);
