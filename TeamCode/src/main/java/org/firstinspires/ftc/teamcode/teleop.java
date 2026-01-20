@@ -69,7 +69,6 @@ public class teleop extends OpMode
     private DcMotorEx rightPelvis = null;
     private DcMotorEx leftPelvis = null;
 
-    private int hondoTarget = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
