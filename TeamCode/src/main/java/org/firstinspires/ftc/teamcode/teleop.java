@@ -125,11 +125,6 @@ public class teleop extends OpMode
         RBMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         RFMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        LBMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        LFMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        RBMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        RFMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-
         LBMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         LFMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         RBMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -190,10 +185,10 @@ public class teleop extends OpMode
         double LBPower = Range.clip(drive - strafe + twist, -1.0, 1.0);
         double RBPower = Range.clip(drive + strafe - twist, -1.0, 1.0);
 
-        LFMotor.setVelocity(LFPower*BasePower);
-        RFMotor.setVelocity(RFPower*BasePower);
-        LBMotor.setVelocity(LBPower*BasePower);
-        RBMotor.setVelocity(RBPower*BasePower);
+        LFMotor.setPower(LFPower);
+        RFMotor.setPower(RFPower);
+        LBMotor.setPower(LBPower);
+        RBMotor.setPower(RBPower);
 
         middle.setPower(middleP);
         Launch.setPower(targetVelocity);
