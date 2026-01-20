@@ -160,7 +160,7 @@ public class teleop extends OpMode
         // Setup a variable for each drive wheel to save power level for telemetry
 
         double inVel = 2000;
-        double interVel = 750;
+        double interVel = 500;
         double pelvisInput = gamepad2.left_stick_y;
         double intakePower = (gamepad2.right_trigger-gamepad2.right_stick_y)*inVel;
         double interTarget = (gamepad2.left_trigger-gamepad2.right_stick_y)*interVel;
