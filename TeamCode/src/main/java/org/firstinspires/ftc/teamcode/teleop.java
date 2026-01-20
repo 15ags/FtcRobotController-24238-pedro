@@ -111,10 +111,6 @@ public class teleop extends OpMode
         pickUp.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         pickUp.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
-        leftPelvis.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        rightPelvis.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        leftPelvis.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rightPelvis.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftPelvis.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         rightPelvis.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         inter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -122,20 +118,18 @@ public class teleop extends OpMode
         inter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         inter.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        LBMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        LFMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        RBMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        RFMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
-        LBMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        LFMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        RBMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        RFMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         LBMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         RBMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         LFMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         RFMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+      
+
+        RBMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        RFMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        LBMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        LFMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
 
 
@@ -166,7 +160,7 @@ public class teleop extends OpMode
         // Setup a variable for each drive wheel to save power level for telemetry
 
         double inVel = 2000;
-        double interVel = 1000;
+        double interVel = 750;
         double pelvisInput = gamepad2.left_stick_y;
         double intakePower = (gamepad2.right_trigger-gamepad2.right_stick_y)*inVel;
         double interTarget = (gamepad2.left_trigger-gamepad2.right_stick_y)*interVel;
