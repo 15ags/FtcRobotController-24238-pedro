@@ -128,10 +128,10 @@ public class teleop extends OpMode
         RBMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         RFMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        LBMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        LFMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        RBMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        RFMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        LBMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        LFMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        RBMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        RFMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         LBMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         RBMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -182,17 +182,17 @@ public class teleop extends OpMode
         double strafe = gamepad1.right_trigger - gamepad1.left_trigger;
         //double strafe = gamepad1.left_stick_x;
         double twist = gamepad1.right_stick_x;
-        double BasePower = 2500;
+        //double BasePower = 2500;
 
         double LFPower = Range.clip(drive + strafe + twist, -1.0, 1.0);
         double RFPower = Range.clip(drive - strafe - twist, -1.0, 1.0);
         double LBPower = Range.clip(drive - strafe + twist, -1.0, 1.0);
         double RBPower = Range.clip(drive + strafe - twist, -1.0, 1.0);
 
-        LFMotor.setVelocity(LFPower*BasePower);
-        RFMotor.setVelocity(RFPower*BasePower);
-        LBMotor.setVelocity(LBPower*BasePower);
-        RBMotor.setVelocity(RBPower*BasePower);
+        LFMotor.setVelocity(LFPower);
+        RFMotor.setVelocity(RFPower);
+        LBMotor.setVelocity(LBPower);
+        RBMotor.setVelocity(RBPower);
 
         leftPelvis.setVelocity(targetVelocity);
         rightPelvis.setVelocity(targetVelocity);
