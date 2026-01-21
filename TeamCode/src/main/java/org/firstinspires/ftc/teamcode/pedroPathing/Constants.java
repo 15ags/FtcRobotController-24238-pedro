@@ -16,21 +16,21 @@ public class Constants {
 
     public static FollowerConstants followerConstants = new FollowerConstants().mass(12);
 
-    public static ThreeWheelIMUConstants localizerConstants = new ThreeWheelIMUConstants()
-            .forwardTicksToInches(1)
-            .strafeTicksToInches(1)
-            .turnTicksToInches(1)
-            .leftPodY(0)
-            .rightPodY(0)
+    public static ThreeWheelConstants localizerConstants = new ThreeWheelConstants()
+            .forwardTicksToInches(0.001359252)  // This is correct!
+            .strafeTicksToInches(0.001359252)
+            .turnTicksToInches(0.001359252)
+            .leftPodY(1)
+            .rightPodY(-1)
             .strafePodX(0)
             .leftEncoder_HardwareMapName("RBMotor")
             .rightEncoder_HardwareMapName("LBMotor")
             .strafeEncoder_HardwareMapName("RFMotor")
             .leftEncoderDirection(Encoder.FORWARD)
             .rightEncoderDirection(Encoder.FORWARD)
-            .strafeEncoderDirection(Encoder.FORWARD)
-            .IMU_HardwareMapName("imu")
-            .IMU_Orientation(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD, RevHubOrientationOnRobot.UsbFacingDirection.UP));
+            .strafeEncoderDirection(Encoder.FORWARD);
+           // .IMU_HardwareMapName("imu")
+//            .IMU_Orientation(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD, RevHubOrientationOnRobot.UsbFacingDirection.UP));
 
 
 
@@ -53,7 +53,7 @@ public class Constants {
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(driveConstants)
-                .threeWheelIMULocalizer(localizerConstants)
+                .threeWheelLocalizer(localizerConstants)
                 .build();
     }
 }
