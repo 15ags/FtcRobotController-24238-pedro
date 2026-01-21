@@ -8,10 +8,11 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name = "Example Auto", group = "Examples")
+@Autonomous(name = "autoRed1", group = "Examples")
 public class autoRed1 extends OpMode {
 
     private Follower follower;
@@ -20,7 +21,14 @@ public class autoRed1 extends OpMode {
     private int pathState;
 
     private Paths paths;
-    private final Pose startPose = new Pose(83.813, 11.456, Math.toRadians(-90));
+    private final Pose startPose = new Pose(83.813, 11.456, Math.toRadians(90));
+
+    private DcMotorEx pickUp = null;
+    private DcMotorEx inter = null;
+
+    // You are not allowed to judge I am sleep deprived
+    private DcMotorEx rightPelvis = null;
+    private DcMotorEx leftPelvis = null;
 
 
     public static class Paths {
@@ -42,7 +50,7 @@ public class autoRed1 extends OpMode {
 
                                     new Pose(100.000, 100.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(223))
+                    ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(43))
 
                     .build();
 
@@ -52,7 +60,7 @@ public class autoRed1 extends OpMode {
 
                                     new Pose(100.000, 83.800)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(223), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(43), Math.toRadians(180))
 
                     .build();
 
@@ -72,7 +80,7 @@ public class autoRed1 extends OpMode {
 
                                     new Pose(100.000, 100.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(223))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(43))
 
                     .build();
 
@@ -82,7 +90,7 @@ public class autoRed1 extends OpMode {
 
                                     new Pose(100.000, 60.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(223), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(43), Math.toRadians(180))
 
                     .build();
 
@@ -92,7 +100,7 @@ public class autoRed1 extends OpMode {
 
                                     new Pose(125.000, 59.500)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
 
                     .build();
 
@@ -102,7 +110,7 @@ public class autoRed1 extends OpMode {
 
                                     new Pose(100.000, 100.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(223))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(43))
 
                     .build();
 
@@ -112,7 +120,7 @@ public class autoRed1 extends OpMode {
 
                                     new Pose(100.000, 35.500)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(223), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(43), Math.toRadians(180))
 
                     .build();
 
@@ -122,7 +130,7 @@ public class autoRed1 extends OpMode {
 
                                     new Pose(124.000, 35.300)
                             )
-                    ).setTangentHeadingInterpolation()
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
 
                     .build();
 
@@ -132,11 +140,10 @@ public class autoRed1 extends OpMode {
 
                                     new Pose(100.000, 100.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(223))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(43))
 
                     .build();
         }
-
     }
 
     public void autonomousPathUpdate() {
@@ -146,107 +153,179 @@ public class autoRed1 extends OpMode {
                 setPathState(1);
                 break;
             case 1:
-
-            /* You could check for
-            - Follower State: "if(!follower.isBusy()) {}"
-            - Time: "if(pathTimer.getElapsedTimeSeconds() > 1) {}"
-            - Robot Position: "if(follower.getPose().getX() > 36) {}"
-            */
-
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if (!follower.isBusy()) {
-                    /* Score Preload */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(paths.prePickUp1, true);
+                    // Turn on pelvises
+                    leftPelvis.setVelocity(1800);
+                    rightPelvis.setVelocity(1800);// Adjust velocity as needed
+                    actionTimer.resetTimer();
                     setPathState(2);
                 }
                 break;
             case 2:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup1Pose's position */
-                if (!follower.isBusy()) {
-                    /* Grab Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(paths.pickUp1, true);
+                // Wait 2 seconds
+                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                    // Turn on inter and pickUp
+                    inter.setVelocity(500);  // Adjust velocity as needed
+                    pickUp.setVelocity(500);  // Adjust velocity as needed
+                    actionTimer.resetTimer();
                     setPathState(3);
                 }
                 break;
             case 3:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
-                if (!follower.isBusy()) {
-                    /* Score Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(paths.launch2, true);
+                // Wait 2 seconds then turn all off
+                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                    leftPelvis.setVelocity(0);
+                    rightPelvis.setVelocity(0);
+                    inter.setVelocity(0);
+                    pickUp.setVelocity(0);
                     setPathState(4);
                 }
                 break;
             case 4:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup2Pose's position */
-                if (!follower.isBusy()) {
-                    /* Grab Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(paths.prePickUp2, true);
-                    setPathState(5);
-                }
+                follower.followPath(paths.prePickUp1, true);
+                pickUp.setVelocity(500);
+                inter.setVelocity(500);
+                setPathState(5);
                 break;
             case 5:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
                 if (!follower.isBusy()) {
-                    /* Score Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(paths.pickUp2, true);
+                    follower.followPath(paths.pickUp1, true);
+                    pickUp.setVelocity(0);
+                    inter.setVelocity(0);
                     setPathState(6);
                 }
                 break;
             case 6:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if (!follower.isBusy()) {
-                    /* Grab Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(paths.launch3, true);
+                    follower.followPath(paths.launch2, true);
                     setPathState(7);
                 }
                 break;
             case 7:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
                 if (!follower.isBusy()) {
-                    /* Grab Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(paths.prePickUp3, true);
+                    // Turn on pelvises
+                    leftPelvis.setVelocity(1800);
+                    rightPelvis.setVelocity(1800);
+                    actionTimer.resetTimer();
                     setPathState(8);
                 }
                 break;
             case 8:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
-                if (!follower.isBusy()) {
-                    /* Grab Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(paths.pickUp3, true);
+                // Wait 2 seconds
+                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                    // Turn on inter and pickUp
+                    inter.setVelocity(500);
+                    pickUp.setVelocity(500);
+                    actionTimer.resetTimer();
                     setPathState(9);
                 }
                 break;
             case 9:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the pickup3Pose's position */
-                if (!follower.isBusy()) {
-                    /* Grab Sample */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are scoring the sample */
-                    follower.followPath(paths.launch4, true);
+                // Wait 2 seconds then turn all off
+                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                    rightPelvis.setVelocity(0);
+                    leftPelvis.setVelocity(0);
+                    inter.setVelocity(0);
+                    pickUp.setVelocity(0);
                     setPathState(10);
                 }
                 break;
             case 10:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
+                follower.followPath(paths.prePickUp2, true);
+                pickUp.setVelocity(500);
+                inter.setVelocity(500);
+                setPathState(11);
+                break;
+            case 11:
                 if (!follower.isBusy()) {
-                    /* Set the state to a Case we won't use or define, so it just stops running an new paths */
-                    setPathState(-1);
+                    follower.followPath(paths.pickUp2, true);
+                    pickUp.setVelocity(0);
+                    inter.setVelocity(0);
+                    setPathState(12);
+                }
+                break;
+            case 12:
+                if (!follower.isBusy()) {
+                    follower.followPath(paths.launch3, true);
+                    setPathState(13);
+                }
+                break;
+            case 13:
+                if (!follower.isBusy()) {
+                    // Turn on pelvises
+                    rightPelvis.setVelocity(1800);
+                    leftPelvis.setVelocity(1800);
+                    actionTimer.resetTimer();
+                    setPathState(14);
+                }
+                break;
+            case 14:
+                // Wait 2 seconds
+                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                    // Turn on inter and pickUp
+                    inter.setVelocity(500);
+                    pickUp.setVelocity(500);
+                    actionTimer.resetTimer();
+                    setPathState(15);
+                }
+                break;
+            case 15:
+                // Wait 2 seconds then turn all off
+                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                    leftPelvis.setVelocity(0);
+                    rightPelvis.setVelocity(0);
+                    inter.setVelocity(0);
+                    pickUp.setVelocity(0);
+                    setPathState(16);
+                }
+                break;
+            case 16:
+                follower.followPath(paths.prePickUp3, true);
+                pickUp.setVelocity(500);
+                inter.setVelocity(500);
+                setPathState(17);
+                break;
+            case 17:
+                if (!follower.isBusy()) {
+                    follower.followPath(paths.pickUp3, true);
+                    pickUp.setVelocity(0);
+                    inter.setVelocity(0);
+                    setPathState(18);
+                }
+                break;
+            case 18:
+                if (!follower.isBusy()) {
+                    follower.followPath(paths.launch4, true);
+                    setPathState(19);
+                }
+                break;
+            case 19:
+                if (!follower.isBusy()) {
+                    // Turn on pelvises
+                    leftPelvis.setVelocity(1800);
+                    rightPelvis.setVelocity(1800);
+                    actionTimer.resetTimer();
+                    setPathState(20);
+                }
+                break;
+            case 20:
+                // Wait 2 seconds
+                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                    // Turn on inter and pickUp
+                    inter.setVelocity(500);
+                    pickUp.setVelocity(500);
+                    actionTimer.resetTimer();
+                    setPathState(21);
+                }
+                break;
+            case 21:
+                // Wait 2 seconds then turn all off
+                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                    leftPelvis.setVelocity(0);
+                    rightPelvis.setVelocity(0);
+                    inter.setVelocity(0);
+                    pickUp.setVelocity(0);
+                    setPathState(-1);  // End autonomous
                 }
                 break;
         }
@@ -293,6 +372,10 @@ public class autoRed1 extends OpMode {
         paths = new Paths(follower);
         follower.setStartingPose(startPose);
 
+        pickUp = hardwareMap.get(DcMotorEx.class,"pickUp");
+        rightPelvis = hardwareMap.get(DcMotorEx.class, "rightPelvis");
+        leftPelvis = hardwareMap.get(DcMotorEx.class, "leftPelvis");
+        inter = hardwareMap.get(DcMotorEx.class, "launch");
     }
 
     /**
