@@ -9,6 +9,7 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
@@ -376,6 +377,23 @@ public class autoRed1 extends OpMode {
         rightPelvis = hardwareMap.get(DcMotorEx.class, "rightPelvis");
         leftPelvis = hardwareMap.get(DcMotorEx.class, "leftPelvis");
         inter = hardwareMap.get(DcMotorEx.class, "launch");
+
+        leftPelvis.setDirection(DcMotorEx.Direction.REVERSE);
+        rightPelvis.setDirection(DcMotorEx.Direction.FORWARD);
+
+        pickUp.setDirection(DcMotorEx.Direction.FORWARD);
+        pickUp.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        pickUp.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        pickUp.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
+        leftPelvis.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rightPelvis.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        inter.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        inter.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        inter.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        inter.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
     }
 
     /**
