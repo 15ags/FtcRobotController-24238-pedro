@@ -32,6 +32,7 @@ public class autoRed1 extends OpMode {
     private DcMotorEx leftPelvis = null;
 
 
+
     public static class Paths {
         public PathChain launch1;
         public PathChain prePickUp1;
@@ -51,7 +52,7 @@ public class autoRed1 extends OpMode {
 
                                     new Pose(100.000, 100.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(43))
+                    ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(45))
 
                     .build();
 
@@ -59,15 +60,15 @@ public class autoRed1 extends OpMode {
                             new BezierLine(
                                     new Pose(100.000, 100.000),
 
-                                    new Pose(100.000, 83.800)
+                                    new Pose(95.000, 83.800)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(43), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(45), Math.toRadians(180))
 
                     .build();
 
             pickUp1 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(100.000, 83.800),
+                                    new Pose(95.000, 83.800),
 
                                     new Pose(125.000, 83.500)
                             )
@@ -81,7 +82,7 @@ public class autoRed1 extends OpMode {
 
                                     new Pose(100.000, 100.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(43))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(45))
 
                     .build();
 
@@ -89,17 +90,17 @@ public class autoRed1 extends OpMode {
                             new BezierLine(
                                     new Pose(100.000, 100.000),
 
-                                    new Pose(100.000, 60.000)
+                                    new Pose(95.000, 60.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(43), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(45), Math.toRadians(180))
 
                     .build();
 
             pickUp2 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(100.000, 60.000),
+                                    new Pose(95.000, 60.000),
 
-                                    new Pose(125.000, 59.500)
+                                    new Pose(130.000, 59.500)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
 
@@ -107,11 +108,11 @@ public class autoRed1 extends OpMode {
 
             launch3 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(125.000, 59.500),
+                                    new Pose(130.000, 59.500),
 
                                     new Pose(100.000, 100.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(43))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(45))
 
                     .build();
 
@@ -119,17 +120,17 @@ public class autoRed1 extends OpMode {
                             new BezierLine(
                                     new Pose(100.000, 100.000),
 
-                                    new Pose(100.000, 35.500)
+                                    new Pose(95.000, 35.500)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(43), Math.toRadians(180))
+                    ).setLinearHeadingInterpolation(Math.toRadians(45), Math.toRadians(180))
 
                     .build();
 
             pickUp3 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(100.000, 35.500),
+                                    new Pose(95.000, 35.500),
 
-                                    new Pose(124.000, 35.300)
+                                    new Pose(130.000, 35.300)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
 
@@ -137,15 +138,16 @@ public class autoRed1 extends OpMode {
 
             launch4 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(124.000, 35.300),
+                                    new Pose(130.000, 35.300),
 
                                     new Pose(100.000, 100.000)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(43))
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(45))
 
                     .build();
         }
     }
+
 
     public void autonomousPathUpdate() {
         switch (pathState) {
@@ -156,25 +158,25 @@ public class autoRed1 extends OpMode {
             case 1:
                 if (!follower.isBusy()) {
                     // Turn on pelvises
-                    leftPelvis.setVelocity(1800);
-                    rightPelvis.setVelocity(1800);// Adjust velocity as needed
+                    leftPelvis.setVelocity(1650);
+                    rightPelvis.setVelocity(1650);// Adjust velocity as needed
                     actionTimer.resetTimer();
                     setPathState(2);
                 }
                 break;
             case 2:
                 // Wait 2 seconds
-                if (actionTimer.getElapsedTimeSeconds() > 1.2) {
+                if (actionTimer.getElapsedTimeSeconds() > 1) {
                     // Turn on inter and pickUp
-                    inter.setVelocity(500);  // Adjust velocity as needed
-                    pickUp.setVelocity(500);  // Adjust velocity as needed
+                    inter.setVelocity(1900);  // Adjust velocity as needed
+                    pickUp.setVelocity(1100);  // Adjust velocity as needed
                     actionTimer.resetTimer();
                     setPathState(3);
                 }
                 break;
             case 3:
                 // Wait 2 seconds then turn all off
-                if (actionTimer.getElapsedTimeSeconds() > 2.5) {
+                if (actionTimer.getElapsedTimeSeconds() > 3) {
                     leftPelvis.setVelocity(0);
                     rightPelvis.setVelocity(0);
                     inter.setVelocity(0);
@@ -189,8 +191,8 @@ public class autoRed1 extends OpMode {
             case 5:
                 if (!follower.isBusy()) {
                     follower.followPath(paths.pickUp1, true);
-                    pickUp.setVelocity(500);
-                    inter.setVelocity(500);
+                    pickUp.setVelocity(1500);
+                    inter.setVelocity(300);
                     setPathState(6);
                 }
                 break;
@@ -205,25 +207,25 @@ public class autoRed1 extends OpMode {
             case 7:
                 if (!follower.isBusy()) {
                     // Turn on pelvises
-                    leftPelvis.setVelocity(1800);
-                    rightPelvis.setVelocity(1800);
+                    leftPelvis.setVelocity(1650);
+                    rightPelvis.setVelocity(1650);
                     actionTimer.resetTimer();
                     setPathState(8);
                 }
                 break;
             case 8:
                 // Wait 2 seconds
-                if (actionTimer.getElapsedTimeSeconds() > 1.2) {
+                if (actionTimer.getElapsedTimeSeconds() > 1) {
                     // Turn on inter and pickUp
-                    inter.setVelocity(500);
-                    pickUp.setVelocity(500);
+                    inter.setVelocity(1900);
+                    pickUp.setVelocity(1100);
                     actionTimer.resetTimer();
                     setPathState(9);
                 }
                 break;
             case 9:
                 // Wait 2 seconds then turn all off
-                if (actionTimer.getElapsedTimeSeconds() > 2.5) {
+                if (actionTimer.getElapsedTimeSeconds() > 4) {
                     rightPelvis.setVelocity(0);
                     leftPelvis.setVelocity(0);
                     inter.setVelocity(0);
@@ -238,8 +240,8 @@ public class autoRed1 extends OpMode {
             case 11:
                 if (!follower.isBusy()) {
                     follower.followPath(paths.pickUp2, true);
-                    pickUp.setVelocity(500);
-                    inter.setVelocity(500);
+                    pickUp.setVelocity(1500);
+                    inter.setVelocity(300);
                     setPathState(12);
                 }
                 break;
@@ -254,25 +256,25 @@ public class autoRed1 extends OpMode {
             case 13:
                 if (!follower.isBusy()) {
                     // Turn on pelvises
-                    rightPelvis.setVelocity(1800);
-                    leftPelvis.setVelocity(1800);
+                    rightPelvis.setVelocity(1650);
+                    leftPelvis.setVelocity(1650);
                     actionTimer.resetTimer();
                     setPathState(14);
                 }
                 break;
             case 14:
                 // Wait 2 seconds
-                if (actionTimer.getElapsedTimeSeconds() > 1.2) {
+                if (actionTimer.getElapsedTimeSeconds() > 1) {
                     // Turn on inter and pickUp
-                    inter.setVelocity(500);
-                    pickUp.setVelocity(500);
+                    inter.setVelocity(1900);
+                    pickUp.setVelocity(1100);
                     actionTimer.resetTimer();
                     setPathState(15);
                 }
                 break;
             case 15:
                 // Wait 2 seconds then turn all off
-                if (actionTimer.getElapsedTimeSeconds() > 2.5) {
+                if (actionTimer.getElapsedTimeSeconds() > 3) {
                     leftPelvis.setVelocity(0);
                     rightPelvis.setVelocity(0);
                     inter.setVelocity(0);
@@ -287,8 +289,8 @@ public class autoRed1 extends OpMode {
             case 17:
                 if (!follower.isBusy()) {
                     follower.followPath(paths.pickUp3, true);
-                    pickUp.setVelocity(500);
-                    inter.setVelocity(500);
+                    pickUp.setVelocity(1500);
+                    inter.setVelocity(600);
                     setPathState(18);
                 }
                 break;
@@ -303,25 +305,25 @@ public class autoRed1 extends OpMode {
             case 19:
                 if (!follower.isBusy()) {
                     // Turn on pelvises
-                    leftPelvis.setVelocity(1800);
-                    rightPelvis.setVelocity(1800);
+                    leftPelvis.setVelocity(1650);
+                    rightPelvis.setVelocity(1650);
                     actionTimer.resetTimer();
                     setPathState(20);
                 }
                 break;
             case 20:
                 // Wait 2 seconds
-                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                if (actionTimer.getElapsedTimeSeconds() > 1.0) {
                     // Turn on inter and pickUp
-                    inter.setVelocity(500);
-                    pickUp.setVelocity(500);
+                    inter.setVelocity(1900);
+                    pickUp.setVelocity(1100);
                     actionTimer.resetTimer();
                     setPathState(21);
                 }
                 break;
             case 21:
                 // Wait 2 seconds then turn all off
-                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                if (actionTimer.getElapsedTimeSeconds() > 3.0) {
                     leftPelvis.setVelocity(0);
                     rightPelvis.setVelocity(0);
                     inter.setVelocity(0);

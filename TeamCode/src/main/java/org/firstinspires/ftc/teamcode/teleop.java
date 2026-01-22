@@ -38,6 +38,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.hardware.DriveTrain;
+
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -53,9 +55,12 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Jag", group="Iterative OpMode")
-public class teleop extends OpMode
-{
+public class teleop extends OpMode {
+
+    private DriveTrain drive;
     // Declare OpMode members.
+
+    private double lastLoopTimeSec = 0.0;
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotorEx LBMotor = null;
     private DcMotorEx RBMotor = null;
@@ -76,6 +81,11 @@ public class teleop extends OpMode
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
+
+        drive = new DriveTrain();
+        drive.init(hardwareMap);
+
+
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -131,6 +141,7 @@ public class teleop extends OpMode
         LBMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         LFMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
+        lastLoopTimeSec = runtime.seconds();
 
 
         // Tell the driver that initialization is complete.
@@ -158,6 +169,20 @@ public class teleop extends OpMode
     @Override
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
+        // calculate dt (seconds) and now ms
+        double nowSec = runtime.seconds();
+        double dt = nowSec - lastLoopTimeSec;
+        if (dt <= 0) dt = 0.001;
+        lastLoopTimeSec = nowSec;
+
+        double nowMs = runtime.milliseconds();
+
+        // read gamepad
+        double forward = -gamepad1.left_stick_y;   // forward positive
+        double strafe  =  gamepad1.right_trigger - gamepad1.left_trigger;   // right positive
+        double turn    =  gamepad1.right_stick_x;  // clockwise positive
+
+        boolean lockBtn = gamepad1.x; // press X to toggle heading lock
 
         double inVel = 2000;
         double interVel = 500;
@@ -167,12 +192,13 @@ public class teleop extends OpMode
         // Scale to your desired maximum velocity
         // This is now your actual max speed
 
+
+
         double maxLaunchVelocity = 1800;
 
         double targetVelocity = pelvisInput * maxLaunchVelocity;
 
         double drive = -gamepad1.left_stick_y;
-        double strafe = gamepad1.right_trigger - gamepad1.left_trigger;
         //double strafe = gamepad1.left_stick_x;
         double twist = gamepad1.right_stick_x;
         //double BasePower = 2500;
@@ -182,15 +208,13 @@ public class teleop extends OpMode
         double LBPower = Range.clip(drive - strafe + twist, -1.0, 1.0);
         double RBPower = Range.clip(drive + strafe - twist, -1.0, 1.0);
 
-        LFMotor.setPower(LFPower);
-        RFMotor.setPower(RFPower);
-        LBMotor.setPower(LBPower);
-        RBMotor.setPower(RBPower);
 
         leftPelvis.setVelocity(targetVelocity);
         rightPelvis.setVelocity(targetVelocity);
         inter.setVelocity(interTarget);
         pickUp.setVelocity(intakePower);
+
+
 
 
         // Show the elapsed game time and wheel power.
