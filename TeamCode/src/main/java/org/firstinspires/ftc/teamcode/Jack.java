@@ -84,7 +84,7 @@ public class Jack extends OpMode {
         }
 
         if (gamepad2.aWasPressed()) {
-            maxLaunchVelocity = 1800;
+            maxLaunchVelocity = 1650;
         }
 
         double inVel = 2000;
