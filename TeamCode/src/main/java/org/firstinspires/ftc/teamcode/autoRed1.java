@@ -164,7 +164,7 @@ public class autoRed1 extends OpMode {
                 break;
             case 2:
                 // Wait 2 seconds
-                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                if (actionTimer.getElapsedTimeSeconds() > 1.2) {
                     // Turn on inter and pickUp
                     inter.setVelocity(500);  // Adjust velocity as needed
                     pickUp.setVelocity(500);  // Adjust velocity as needed
@@ -174,7 +174,7 @@ public class autoRed1 extends OpMode {
                 break;
             case 3:
                 // Wait 2 seconds then turn all off
-                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                if (actionTimer.getElapsedTimeSeconds() > 2.5) {
                     leftPelvis.setVelocity(0);
                     rightPelvis.setVelocity(0);
                     inter.setVelocity(0);
@@ -184,21 +184,21 @@ public class autoRed1 extends OpMode {
                 break;
             case 4:
                 follower.followPath(paths.prePickUp1, true);
-                pickUp.setVelocity(500);
-                inter.setVelocity(500);
                 setPathState(5);
                 break;
             case 5:
                 if (!follower.isBusy()) {
                     follower.followPath(paths.pickUp1, true);
-                    pickUp.setVelocity(0);
-                    inter.setVelocity(0);
+                    pickUp.setVelocity(500);
+                    inter.setVelocity(500);
                     setPathState(6);
                 }
                 break;
             case 6:
                 if (!follower.isBusy()) {
                     follower.followPath(paths.launch2, true);
+                    pickUp.setVelocity(0);
+                    inter.setVelocity(0);
                     setPathState(7);
                 }
                 break;
@@ -213,7 +213,7 @@ public class autoRed1 extends OpMode {
                 break;
             case 8:
                 // Wait 2 seconds
-                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                if (actionTimer.getElapsedTimeSeconds() > 1.2) {
                     // Turn on inter and pickUp
                     inter.setVelocity(500);
                     pickUp.setVelocity(500);
@@ -223,7 +223,7 @@ public class autoRed1 extends OpMode {
                 break;
             case 9:
                 // Wait 2 seconds then turn all off
-                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                if (actionTimer.getElapsedTimeSeconds() > 2.5) {
                     rightPelvis.setVelocity(0);
                     leftPelvis.setVelocity(0);
                     inter.setVelocity(0);
@@ -233,21 +233,21 @@ public class autoRed1 extends OpMode {
                 break;
             case 10:
                 follower.followPath(paths.prePickUp2, true);
-                pickUp.setVelocity(500);
-                inter.setVelocity(500);
                 setPathState(11);
                 break;
             case 11:
                 if (!follower.isBusy()) {
                     follower.followPath(paths.pickUp2, true);
-                    pickUp.setVelocity(0);
-                    inter.setVelocity(0);
+                    pickUp.setVelocity(500);
+                    inter.setVelocity(500);
                     setPathState(12);
                 }
                 break;
             case 12:
                 if (!follower.isBusy()) {
                     follower.followPath(paths.launch3, true);
+                    pickUp.setVelocity(0);
+                    inter.setVelocity(0);
                     setPathState(13);
                 }
                 break;
@@ -262,7 +262,7 @@ public class autoRed1 extends OpMode {
                 break;
             case 14:
                 // Wait 2 seconds
-                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                if (actionTimer.getElapsedTimeSeconds() > 1.2) {
                     // Turn on inter and pickUp
                     inter.setVelocity(500);
                     pickUp.setVelocity(500);
@@ -272,7 +272,7 @@ public class autoRed1 extends OpMode {
                 break;
             case 15:
                 // Wait 2 seconds then turn all off
-                if (actionTimer.getElapsedTimeSeconds() > 2.0) {
+                if (actionTimer.getElapsedTimeSeconds() > 2.5) {
                     leftPelvis.setVelocity(0);
                     rightPelvis.setVelocity(0);
                     inter.setVelocity(0);
@@ -282,21 +282,21 @@ public class autoRed1 extends OpMode {
                 break;
             case 16:
                 follower.followPath(paths.prePickUp3, true);
-                pickUp.setVelocity(500);
-                inter.setVelocity(500);
                 setPathState(17);
                 break;
             case 17:
                 if (!follower.isBusy()) {
                     follower.followPath(paths.pickUp3, true);
-                    pickUp.setVelocity(0);
-                    inter.setVelocity(0);
+                    pickUp.setVelocity(500);
+                    inter.setVelocity(500);
                     setPathState(18);
                 }
                 break;
             case 18:
                 if (!follower.isBusy()) {
                     follower.followPath(paths.launch4, true);
+                    pickUp.setVelocity(0);
+                    inter.setVelocity(0);
                     setPathState(19);
                 }
                 break;
