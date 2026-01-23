@@ -15,8 +15,6 @@ import org.firstinspires.ftc.teamcode.hardware.DriveTrain;
 public class Jack extends OpMode {
 
     private DriveTrain drive;
-    private boolean defense = false;
-
     private double maxLaunchVelocity;
     private DcMotorEx pickUp = null;
     private DcMotorEx inter = null;
