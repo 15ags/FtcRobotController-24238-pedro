@@ -61,7 +61,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="autoBeta", group="Robot")
+@Autonomous(name="autored1", group="Robot")
 public class autored1 extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -167,7 +167,7 @@ public class autored1 extends LinearOpMode {
 
 
 
-        Launch.setPower(1);
+        Launch.setPower(0.8);
         waitS(2);
         middle.setPower(0.7);
         waitS(2);
@@ -177,7 +177,8 @@ public class autored1 extends LinearOpMode {
         middle.setPower(0);
         Launch.setPower(0);
         encoderDrive(0.3, -100, 0, 0, 5);
-        encoderDrive(0.3, 0, 0, -25, 5);
+        intake.setPower(0.7);
+        encoderDrive(0.3, -100, 0, 0, 5);
 
 
 
