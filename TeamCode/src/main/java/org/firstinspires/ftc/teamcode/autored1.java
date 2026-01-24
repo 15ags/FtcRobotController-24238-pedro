@@ -176,9 +176,6 @@ public class autored1 extends LinearOpMode {
         intake.setPower(0);
         middle.setPower(0);
         Launch.setPower(0);
-        encoderDrive(0.3, -100, 0, 0, 5);
-        intake.setPower(0.7);
-        encoderDrive(0.3, -100, 0, 0, 5);
 
 
 
