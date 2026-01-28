@@ -168,14 +168,14 @@ public class teleop extends OpMode
 
         double pelvisInput = gamepad2.left_stick_y;
         double middleP = gamepad2.right_stick_y;
-        double inin = gamepad2.right_trigger-gamepad2.left_trigger;
+        double in = gamepad2.right_trigger-gamepad2.left_trigger;
         // double intakePower = gamepad2.left_trigger-gamepad2.right_trigger;
 
         // Scale to your desired maximum velocity
-        double intakeV = inin*2500;
+        double intakeV = in*2500;
         // This is now your actual max speed
         double maxLaunchVelocity = 1050;
-        double targetVelocity = pelvisInput;
+        double targetVelocity = pelvisInput*maxLaunchVelocity;
 
         double drive = -gamepad1.left_stick_y;
         double strafe = gamepad1.right_trigger - gamepad1.left_trigger;
@@ -183,7 +183,6 @@ public class teleop extends OpMode
         double twist = gamepad1.right_stick_x;
         double BasePower = 2500;
 
-        // TODO: Set up classes for everything
 
         double LFPower = Range.clip(drive + strafe + twist, -1.0, 1.0);
         double RFPower = Range.clip(drive - strafe - twist, -1.0, 1.0);
@@ -191,9 +190,9 @@ public class teleop extends OpMode
         double RBPower = Range.clip(drive + strafe - twist, -1.0, 1.0);
 
         LFMotor.setVelocity(LFPower*BasePower);
-        RFMotor.setPower(RFPower*BasePower);
-        LBMotor.setPower(LBPower*BasePower);
-        RBMotor.setPower(RBPower*BasePower);
+        RFMotor.setVelocity(RFPower*BasePower);
+        LBMotor.setVelocity(LBPower*BasePower);
+        RBMotor.setVelocity(RBPower*BasePower);
 
         middle.setPower(middleP);
         Launch.setPower(targetVelocity);
