@@ -175,7 +175,7 @@ public class teleop extends OpMode
         // Scale to your desired maximum velocity
         double intakeV = in*2500;
         // This is now your actual max speed
-        double maxLaunchVelocity = 1050;
+        double maxLaunchVelocity = 1500;
         double targetVelocity = pelvisInput*maxLaunchVelocity;
 
         double drive = -gamepad1.left_stick_y;
