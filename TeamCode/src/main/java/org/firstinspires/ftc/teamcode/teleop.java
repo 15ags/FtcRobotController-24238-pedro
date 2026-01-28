@@ -182,7 +182,7 @@ public class teleop extends OpMode
         double strafe = gamepad1.right_trigger - gamepad1.left_trigger;
         //double strafe = gamepad1.left_stick_x;
         double twist = gamepad1.right_stick_x;
-        double BasePower = 2500;
+        double BasePower = 3000;
 
 
         double LFPower = Range.clip(drive + strafe + twist, -1.0, 1.0);
