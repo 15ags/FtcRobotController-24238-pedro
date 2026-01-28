@@ -167,7 +167,8 @@ public class teleop extends OpMode
         // Setup a variable for each drive wheel to save power level for telemetry
 
         double pelvisInput = gamepad2.left_stick_y;
-        double middleP = gamepad2.right_stick_y;
+        double middleMax = 2500;
+        double middleP = gamepad2.right_stick_y*middleMax;
         double in = gamepad2.right_trigger-gamepad2.left_trigger;
         // double intakePower = gamepad2.left_trigger-gamepad2.right_trigger;
 
@@ -194,8 +195,8 @@ public class teleop extends OpMode
         LBMotor.setVelocity(LBPower*BasePower);
         RBMotor.setVelocity(RBPower*BasePower);
 
-        middle.setPower(middleP);
-        Launch.setPower(targetVelocity);
+        middle.setVelocity(middleP);
+        Launch.setVelocity(targetVelocity);
         intake.setVelocity(intakeV);
 
 
