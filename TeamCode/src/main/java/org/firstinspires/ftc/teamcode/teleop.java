@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -175,8 +176,10 @@ public class teleop extends OpMode
         // Scale to your desired maximum velocity
         double intakeV = in*2500;
         // This is now your actual max speed
-        double maxLaunchVelocity = 1500;
+        double maxLaunchVelocity = 1700;
         double targetVelocity = pelvisInput*maxLaunchVelocity;
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(300, 100.0, 0.0, 0.1);
+        Launch.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
         double drive = -gamepad1.left_stick_y;
         double strafe = gamepad1.right_trigger - gamepad1.left_trigger;
@@ -203,6 +206,8 @@ public class teleop extends OpMode
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motors", "LB: %.2f | RB: %.2f | LF: %.2f | RF: %.2f", LBPower, RBPower, LFPower, RFPower);
+        telemetry.addData("LaunchSpeed", Launch.getVelocity());
+        telemetry.addData("LaunchError", Launch.getVelocity()-targetVelocity);
 
     }
 
