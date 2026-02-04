@@ -176,9 +176,9 @@ public class teleop extends OpMode
         // Scale to your desired maximum velocity
         double intakeV = in*2500;
         // This is now your actual max speed
-        double maxLaunchVelocity = 1700;
+        double maxLaunchVelocity = 1500;
         double targetVelocity = pelvisInput*maxLaunchVelocity;
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(300, 100.0, 0.0, 0.1);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(500, 100.0, 0.0, 0.1);
         Launch.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
         double drive = -gamepad1.left_stick_y;
