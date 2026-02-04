@@ -30,7 +30,7 @@ package org.firstinspires.ftc.teamcode;
  */
 
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -102,7 +102,7 @@ public class teleop extends OpMode
         LBMotor.setDirection(DcMotorEx.Direction.FORWARD);
         RBMotor.setDirection(DcMotorEx.Direction.REVERSE);
         LFMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        RFMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        RFMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
         // Directions for the throwing motors
         middle.setDirection(DcMotorEx.Direction.FORWARD);
@@ -176,7 +176,7 @@ public class teleop extends OpMode
         // Scale to your desired maximum velocity
         double intakeV = in*2500;
         // This is now your actual max speed
-        double maxLaunchVelocity = 1500;
+        double maxLaunchVelocity = 1250;
         double targetVelocity = pelvisInput*maxLaunchVelocity;
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(500, 100.0, 0.0, 0.1);
         Launch.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
