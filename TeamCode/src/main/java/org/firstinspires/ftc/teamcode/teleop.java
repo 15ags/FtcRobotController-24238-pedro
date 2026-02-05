@@ -1,148 +1,45 @@
 package org.firstinspires.ftc.teamcode;
 
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
 
-
-
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-
-/*
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When a selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all iterative OpModes contain.
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
- */
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
+import com.pedropathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.hardware.DriveBase;
+import org.firstinspires.ftc.teamcode.hardware.ScoringMotors;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @TeleOp(name="teleop", group="Iterative OpMode")
 public class teleop extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotorEx LBMotor = null;
-    private DcMotorEx RBMotor = null;
-    private DcMotorEx LFMotor = null;
-    private DcMotorEx RFMotor = null;
-
-    // The motors for the ball throwing bloody thing
-    // TODO: Read documentation to change to ideal motor for speed
-    private DcMotorEx intake = null;
-
-
-    // You are not allowed to judge I am sleep deprived
-    private DcMotorEx Launch = null;
-    private DcMotorEx middle = null;
+    private DriveBase driveBase;
+    private ScoringMotors scoringMotors;
+    public static Follower follower;
+    static TelemetryManager telemetryM;
+    private final Pose startPose = new Pose(123.8, 122.6, Math.toRadians(37));
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        LBMotor  = hardwareMap.get(DcMotorEx.class, "LBMotor");
-        RBMotor  = hardwareMap.get(DcMotorEx.class, "RBMotor");
-        LFMotor  = hardwareMap.get(DcMotorEx.class, "LFMotor");
-        RFMotor  = hardwareMap.get(DcMotorEx.class, "RFMotor");
-
-        // Initializing the Motors to the correct entry
-        intake = hardwareMap.get(DcMotorEx.class,"intake");
-        Launch = hardwareMap.get(DcMotorEx.class, "Launch");
-        middle = hardwareMap.get(DcMotorEx.class, "middle");
+        follower = Constants.createFollower(hardwareMap);
+        follower.setStartingPose(startPose);
 
 
+        driveBase = new DriveBase(hardwareMap);
 
-
-
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        LBMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        RBMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        LFMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        RFMotor.setDirection(DcMotorEx.Direction.REVERSE);
-
-        // Directions for the throwing motors
-        middle.setDirection(DcMotorEx.Direction.FORWARD);
-        Launch.setDirection(DcMotorEx.Direction.FORWARD);
-        intake.setDirection(DcMotorEx.Direction.FORWARD);
-
-
-        middle.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        Launch.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        middle.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        Launch.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        middle.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        Launch.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-
-        intake.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        intake.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        intake.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-
-        LBMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        LFMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        RBMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        RFMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-
-        LFMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RBMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        RFMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        LBMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-
-        LBMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        LFMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        RBMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        RFMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-
-
-
-
-
+        scoringMotors = new ScoringMotors(hardwareMap);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
     }
 
     /*
@@ -165,50 +62,26 @@ public class teleop extends OpMode
      */
     @Override
     public void loop() {
-        // Setup a variable for each drive wheel to save power level for telemetry
+        driveBase.baseTele(gamepad1);
+        scoringMotors.scoringMotorsTele(gamepad2);
 
-        double pelvisInput = gamepad2.left_stick_y;
-        double middleMax = 2500;
-        double middleP = gamepad2.right_stick_y*middleMax;
-        double in = gamepad2.right_trigger-gamepad2.left_trigger;
-        // double intakePower = gamepad2.left_trigger-gamepad2.right_trigger;
+        follower.update();
+        draw();
 
-        // Scale to your desired maximum velocity
-        double intakeV = in*2500;
-        // This is now your actual max speed
-        double maxLaunchVelocity = 1250;
-        double targetVelocity = pelvisInput*maxLaunchVelocity;
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(500, 100.0, 0.0, 0.1);
-        Launch.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-
-        double drive = -gamepad1.left_stick_y;
-        double strafe = gamepad1.right_trigger - gamepad1.left_trigger;
-        //double strafe = gamepad1.left_stick_x;
-        double twist = gamepad1.right_stick_x;
-        double BasePower = 3000;
-
-
-        double LFPower = Range.clip(drive + strafe + twist, -1.0, 1.0);
-        double RFPower = Range.clip(drive - strafe - twist, -1.0, 1.0);
-        double LBPower = Range.clip(drive - strafe + twist, -1.0, 1.0);
-        double RBPower = Range.clip(drive + strafe - twist, -1.0, 1.0);
-
-        LFMotor.setVelocity(LFPower*BasePower);
-        RFMotor.setVelocity(RFPower*BasePower);
-        LBMotor.setVelocity(LBPower*BasePower);
-        RBMotor.setVelocity(RBPower*BasePower);
-
-        middle.setVelocity(middleP);
-        Launch.setVelocity(targetVelocity);
-        intake.setVelocity(intakeV);
-
-
-        // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "LB: %.2f | RB: %.2f | LF: %.2f | RF: %.2f", LBPower, RBPower, LFPower, RFPower);
-        telemetry.addData("LaunchSpeed", Launch.getVelocity());
-        telemetry.addData("LaunchError", Launch.getVelocity()-targetVelocity);
+        telemetry.addData("LaunchSpeed", scoringMotors.getLaunchVel());
+        telemetry.addData("LaunchError", scoringMotors.getLaunchVel()- scoringMotors.getTargetLaunchVel());
 
+        telemetryM.debug("x:" + follower.getPose().getX());
+        telemetryM.debug("y:" + follower.getPose().getY());
+        telemetryM.debug("heading:" + follower.getPose().getHeading());
+        telemetryM.debug("total heading:" + follower.getTotalHeading());
+        telemetryM.debug("position", follower.getPose());
+        telemetryM.debug("velocity", follower.getVelocity());
+        telemetryM.debug("Status", "Run Time: " + runtime.toString());
+        telemetryM.debug("LaunchSpeed", scoringMotors.getLaunchVel());
+        telemetryM.debug("LaunchError", scoringMotors.getLaunchVel()- scoringMotors.getTargetLaunchVel());
+        telemetryM.update(telemetry);
     }
 
     /*
@@ -218,5 +91,7 @@ public class teleop extends OpMode
     // this is just a simple test to understand branches
     @Override
     public void stop() {
+        driveBase.stop();
+        scoringMotors.stop();
     }
 }

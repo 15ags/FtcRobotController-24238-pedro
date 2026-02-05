@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -61,8 +60,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="autored1", group="Robot")
-public class autored1 extends LinearOpMode {
+@Autonomous(name="autoEmergency", group="Robot")
+public class autoEmergency extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -168,11 +167,11 @@ public class autored1 extends LinearOpMode {
 
 
         Launch.setPower(0.8);
-        waitS(2);
+        waitS(1);
         middle.setPower(0.7);
-        waitS(2);
+        waitS(1);
         intake.setPower(0.7);
-        waitS(2);
+        waitS(1);
         intake.setPower(0);
         middle.setPower(0);
         Launch.setPower(0);
