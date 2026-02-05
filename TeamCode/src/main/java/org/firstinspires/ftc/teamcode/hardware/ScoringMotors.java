@@ -17,7 +17,7 @@ public class ScoringMotors {
     private ElapsedTime launchTimer = new ElapsedTime();
     public static final double middleMax = 2500;
     public static final double intakeV = 2500;
-    public static final double maxLaunchVelocity = 1300;
+    public static final double maxLaunchVelocity = 1200;
     public static final double launchDelay = 1;
     public ScoringMotors(HardwareMap hardwareMap){
         intake = hardwareMap.get(DcMotorEx.class,"intake");
@@ -38,8 +38,8 @@ public class ScoringMotors {
         middle.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         launch.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         middle.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        launch.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(500, 100.0, 0.0, 0.1);
+        launch.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(500, 0, 0.0, 40);
         launch.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
         intake.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);

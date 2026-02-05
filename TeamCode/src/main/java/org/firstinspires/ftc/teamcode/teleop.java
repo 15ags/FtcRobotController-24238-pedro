@@ -29,8 +29,8 @@ public class teleop extends OpMode
     @Override
     public void init() {
 
-        follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(startPose);
+       // follower = Constants.createFollower(hardwareMap);
+        //follower.setStartingPose(startPose);
 
 
         driveBase = new DriveBase(hardwareMap);
@@ -65,19 +65,19 @@ public class teleop extends OpMode
         driveBase.baseTele(gamepad1);
         scoringMotors.scoringMotorsTele(gamepad2);
 
-        follower.update();
-        draw();
+        //follower.update();
+        //draw();
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("LaunchSpeed", scoringMotors.getLaunchVel());
         telemetry.addData("LaunchError", scoringMotors.getLaunchVel()- scoringMotors.getTargetLaunchVel());
 
-        telemetryM.debug("x:" + follower.getPose().getX());
-        telemetryM.debug("y:" + follower.getPose().getY());
-        telemetryM.debug("heading:" + follower.getPose().getHeading());
-        telemetryM.debug("total heading:" + follower.getTotalHeading());
-        telemetryM.debug("position", follower.getPose());
-        telemetryM.debug("velocity", follower.getVelocity());
+        //telemetryM.debug("x:" + follower.getPose().getX());
+        //telemetryM.debug("y:" + follower.getPose().getY());
+        //telemetryM.debug("heading:" + follower.getPose().getHeading());
+        //telemetryM.debug("total heading:" + follower.getTotalHeading());
+        //telemetryM.debug("position", follower.getPose());
+       // telemetryM.debug("velocity", follower.getVelocity());
         telemetryM.debug("Status", "Run Time: " + runtime.toString());
         telemetryM.debug("LaunchSpeed", scoringMotors.getLaunchVel());
         telemetryM.debug("LaunchError", scoringMotors.getLaunchVel()- scoringMotors.getTargetLaunchVel());
