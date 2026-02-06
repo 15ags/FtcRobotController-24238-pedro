@@ -39,7 +39,7 @@ public class ScoringMotors {
         launch.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         middle.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         launch.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(500, 0, 0.0, 40);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(850, 0, 0.0, 40);
         launch.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
         intake.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -67,13 +67,13 @@ public class ScoringMotors {
     public boolean updateLaunchSequence() {
         switch (launchState) {
             case 0:
-                launch.setVelocity(maxLaunchVelocity);
+                launch.setVelocity(-maxLaunchVelocity);
                 launchTimer.reset();
                 launchState = 1;
                 return false;
             case 1:
                 if (launchTimer.seconds() > launchDelay) {
-                    middle.setVelocity(middleMax);
+                    middle.setVelocity(-middleMax);
                     launchTimer.reset();
                     launchState=2;
                     return false;

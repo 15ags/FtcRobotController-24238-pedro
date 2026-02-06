@@ -20,7 +20,7 @@ public class teleop extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DriveBase driveBase;
     private ScoringMotors scoringMotors;
-    public static Follower follower;
+    //public static Follower follower;
     static TelemetryManager telemetryM;
     private final Pose startPose = new Pose(123.8, 122.6, Math.toRadians(37));
     /*
@@ -30,7 +30,7 @@ public class teleop extends OpMode
     public void init() {
 
        // follower = Constants.createFollower(hardwareMap);
-        //follower.setStartingPose(startPose);
+       // follower.setStartingPose(startPose);
 
 
         driveBase = new DriveBase(hardwareMap);
@@ -77,7 +77,7 @@ public class teleop extends OpMode
         //telemetryM.debug("heading:" + follower.getPose().getHeading());
         //telemetryM.debug("total heading:" + follower.getTotalHeading());
         //telemetryM.debug("position", follower.getPose());
-       // telemetryM.debug("velocity", follower.getVelocity());
+        //telemetryM.debug("velocity", follower.getVelocity());
         telemetryM.debug("Status", "Run Time: " + runtime.toString());
         telemetryM.debug("LaunchSpeed", scoringMotors.getLaunchVel());
         telemetryM.debug("LaunchError", scoringMotors.getLaunchVel()- scoringMotors.getTargetLaunchVel());
