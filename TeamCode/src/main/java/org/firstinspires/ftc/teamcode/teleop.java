@@ -27,10 +27,8 @@ public class teleop extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DriveBase driveBase;
     private ScoringMotors scoringMotors;
-    //public static Follower follower;
     static TelemetryManager telemetryM;
     private Limelight3A limelight;
-    private IMU imu;
     boolean inZoneAuto = false;
     /*
      * Code to run ONCE when the driver hits INIT
@@ -45,13 +43,10 @@ public class teleop extends OpMode
         limelight.setPollRateHz(100);
         limelight.pipelineSwitch(0);
         limelight.start();
-        imu = hardwareMap.get(IMU.class, "imu");
-        RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
-                RevHubOrientationOnRobot.UsbFacingDirection.DOWN);
+
 
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-        imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
         telemetryM.addLine("initialized");
     }
 
@@ -75,8 +70,6 @@ public class teleop extends OpMode
      */
     @Override
     public void loop() {
-        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-        limelight.updateRobotOrientation(orientation.getYaw());
         LLResult llResult = limelight.getLatestResult();
         boolean driverIdle = Math.abs(gamepad2.left_stick_y) < 0.1;
 
@@ -86,14 +79,14 @@ public class teleop extends OpMode
         }
 
         if (llResult != null && llResult.isValid()) {
-            Pose3D botPose_mt2 = llResult.getBotpose_MT2();
+            Pose3D botPose = llResult.getBotpose();
             telemetryM.addData("Tx", llResult.getTx());
             telemetryM.addData("Ty", llResult.getTy());
             telemetryM.addData("Ta", llResult.getTa());
-            if (botPose_mt2 != null) {
-                double x = botPose_mt2.getPosition().x;
-                double y = botPose_mt2.getPosition().y;
-                telemetry.addData("MT2 Location:", "(" + x + ", " + y + ")");
+            if (botPose != null) {
+                double x = botPose.getPosition().x;
+                double y = botPose.getPosition().y;
+                telemetry.addData("MT1 Location:", "(" + x + ", " + y + ")");
                 boolean inRedZone = x > 1.8 && y > 1.8;
                 boolean inBlueZone = x < 1.8 && y > 1.8;
 
