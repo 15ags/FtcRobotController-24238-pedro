@@ -17,10 +17,10 @@ public class ScoringMotors {
     private ElapsedTime launchTimer = new ElapsedTime();
     public static final double middleMax = 2500;
     public static final double intakeV = 2500;
-    public static final double maxLaunchVelocity = 1200;
-    public static final double launchDelay = 1;
+    public static final double maxLaunchVelocity = 1050;
+    public static final double launchDelay = 1.2;
     public static final double middleDelay = 0.5;
-    public static final double stopDelay = 0.5;
+    public static final double stopDelay = 0.8;
     public ScoringMotors(HardwareMap hardwareMap){
         intake = hardwareMap.get(DcMotorEx.class,"intake");
         launch = hardwareMap.get(DcMotorEx.class, "Launch");
@@ -73,13 +73,13 @@ public class ScoringMotors {
     public boolean updateLaunchSequence() {
         switch (launchState) {
             case 0:
-                launch.setVelocity(-maxLaunchVelocity);
+                launch.setVelocity(-1050);
                 launchTimer.reset();
                 launchState = 1;
                 return false;
             case 1:
                 if (launchTimer.seconds() > launchDelay) {
-                    middle.setVelocity(-middleMax);
+                    middle.setVelocity(-2000);
                     launchTimer.reset();
                     launchState=2;
                     return false;
@@ -109,6 +109,12 @@ public class ScoringMotors {
     }
     public double getTargetLaunchVel() {
         return targetLaunchVel;
+    }
+
+    public void intakeBalls() {
+        intake.setVelocity(3000);
+        middle.setVelocity(-800);
+        launch.setVelocity(1100);
     }
     public void stop() {
         launch.setVelocity(0);

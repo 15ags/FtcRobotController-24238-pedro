@@ -47,7 +47,7 @@ public class teleop extends OpMode
         limelight.start();
         imu = hardwareMap.get(IMU.class, "imu");
         RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP);
+                RevHubOrientationOnRobot.UsbFacingDirection.DOWN);
 
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
@@ -94,8 +94,8 @@ public class teleop extends OpMode
                 double x = botPose_mt2.getPosition().x;
                 double y = botPose_mt2.getPosition().y;
                 telemetry.addData("MT2 Location:", "(" + x + ", " + y + ")");
-                boolean inRedZone = x > 2.4 && y > 2.4;
-                boolean inBlueZone = x > 2.4 && y > 1.2;
+                boolean inRedZone = x > 1.8 && y > 1.8;
+                boolean inBlueZone = x < 1.8 && y > 1.8;
 
                 if ((inRedZone||inBlueZone) && driverIdle && !inZoneAuto) {
                     scoringMotors.preLaunch();

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode; // make sure this aligns with class loca
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -24,6 +25,8 @@ public class autoBlue1 extends OpMode {
     private final Pose startPose = new Pose(20.2, 122.6, Math.toRadians(144));
     private ScoringMotors scoringMotors;
 
+
+
     public static class Paths {
         public PathChain prePickUp1;
         public PathChain pickUp1;
@@ -31,13 +34,15 @@ public class autoBlue1 extends OpMode {
         public PathChain prePickUp2;
         public PathChain pickUp2;
         public PathChain launch3;
+        public PathChain prePickUp3;
+        public PathChain pickUp3;
 
         public Paths(Follower follower) {
             prePickUp1 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(20.200, 122.600),
 
-                                    new Pose(44.000, 84.000)
+                                    new Pose(54.000, 84.000)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(144), Math.toRadians(180))
 
@@ -45,7 +50,7 @@ public class autoBlue1 extends OpMode {
 
             pickUp1 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(44.000, 84.000),
+                                    new Pose(54.000, 84.000),
 
                                     new Pose(19.000, 84.000)
                             )
@@ -67,7 +72,7 @@ public class autoBlue1 extends OpMode {
                             new BezierLine(
                                     new Pose(20.200, 122.600),
 
-                                    new Pose(44.000, 60.000)
+                                    new Pose(54.000, 60.000)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(144), Math.toRadians(180))
 
@@ -75,25 +80,46 @@ public class autoBlue1 extends OpMode {
 
             pickUp2 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(44.000, 60.000),
+                                    new Pose(54.000, 60.000),
 
-                                    new Pose(19.000, 60.000)
+                                    new Pose(14.000, 60.000)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
 
                     .build();
 
             launch3 = follower.pathBuilder().addPath(
-                            new BezierLine(
-                                    new Pose(19.000, 60.000),
-
+                            new BezierCurve(
+                                    new Pose(14.000, 60.000),
+                                    new Pose(44.000, 60.000),
                                     new Pose(20.200, 122.600)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(144))
 
                     .build();
+
+            prePickUp3 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(20.200, 122.600),
+
+                                    new Pose(54.000, 36.000)
+                            )
+                    ).setTangentHeadingInterpolation()
+
+                    .build();
+
+            pickUp3 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(54.000, 36.000),
+
+                                    new Pose(14.000, 36.000)
+                            )
+                    ).setTangentHeadingInterpolation()
+
+                    .build();
         }
     }
+
 
 
     public void autonomousPathUpdate() {
@@ -112,13 +138,14 @@ public class autoBlue1 extends OpMode {
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                    follower.followPath(paths.pickUp1, true);
+                    scoringMotors.intakeBalls();
+                    follower.followPath(paths.pickUp1, 0.75, true);
                     setPathState(3);
                 }
                 break;
             case 3:
                 if(!follower.isBusy()) {
-                    /* Got sample, go to launch */
+                    scoringMotors.stop();
                     follower.followPath(paths.launch2, true);
                     setPathState(4);
                 }
@@ -139,12 +166,14 @@ public class autoBlue1 extends OpMode {
                 break;
             case 6:
                 if(!follower.isBusy()) {
-                    follower.followPath(paths.pickUp2, true);
+                    scoringMotors.intakeBalls();
+                    follower.followPath(paths.pickUp2, 0.75, true);
                     setPathState(7);
                 }
                 break;
             case 7:
                 if(!follower.isBusy()) {
+                    scoringMotors.stop();
                     follower.followPath(paths.launch3, true);
                     setPathState(8);
                 }
@@ -159,7 +188,27 @@ public class autoBlue1 extends OpMode {
             case 9:
                 // Wait for launch sequence to complete
                 if (scoringMotors.updateLaunchSequence()) {
-                    setPathState(-1); // Done
+                    setPathState(10); // Done
+                }
+                break;
+            case 10:
+                if(!follower.isBusy()) {
+                    scoringMotors.stop();
+                    follower.followPath(paths.prePickUp3, true);
+                    setPathState(11);
+                }
+                break;
+            case 11:
+                if(!follower.isBusy()) {
+                    scoringMotors.intakeBalls();
+                    follower.followPath(paths.pickUp3, true);
+                    setPathState(12);
+                }
+                break;
+            case 12:
+                if(!follower.isBusy()) {
+                    scoringMotors.stop();
+                    setPathState(-1);
                 }
                 break;
         }
@@ -176,7 +225,6 @@ public class autoBlue1 extends OpMode {
         // These loop the movements of the robot, these must be called continuously in order to work
         follower.update();
         autonomousPathUpdate();
-        draw();
 
         // Feedback to Driver Hub for debugging
         telemetry.addData("path state", pathState);
@@ -192,6 +240,7 @@ public class autoBlue1 extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
+        actionTimer = new Timer();
 
         scoringMotors = new ScoringMotors(hardwareMap);
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode; // make sure this aligns with class loca
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -23,20 +24,26 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
     private Paths paths;
     private final Pose startPose = new Pose(123.8, 122.6, Math.toRadians(37));
     private ScoringMotors scoringMotors;
+
+
+
+
     public static class Paths {
-        public PathChain prePickup1;
+        public PathChain prePickUp1;
         public PathChain pickUp1;
         public PathChain launch2;
         public PathChain prePickUp2;
         public PathChain pickUp2;
         public PathChain launch3;
+        public PathChain prePickUp3;
+        public PathChain pickUp3;
 
         public Paths(Follower follower) {
-            prePickup1 = follower.pathBuilder().addPath(
+            prePickUp1 = follower.pathBuilder().addPath(
                             new BezierLine(
                                     new Pose(123.800, 122.600),
 
-                                    new Pose(100.000, 84.000)
+                                    new Pose(90.000, 84.000)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(37), Math.toRadians(0))
 
@@ -44,7 +51,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
             pickUp1 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(100.000, 84.000),
+                                    new Pose(90.000, 84.000),
 
                                     new Pose(125.000, 84.000)
                             )
@@ -66,7 +73,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                             new BezierLine(
                                     new Pose(123.800, 122.600),
 
-                                    new Pose(100.000, 60.000)
+                                    new Pose(90.000, 60.000)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(37), Math.toRadians(0))
 
@@ -74,25 +81,49 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
             pickUp2 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(100.000, 60.000),
+                                    new Pose(90.000, 60.000),
 
-                                    new Pose(125.000, 60.000)
+                                    new Pose(130.000, 60.000)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
 
                     .build();
 
             launch3 = follower.pathBuilder().addPath(
-                            new BezierLine(
-                                    new Pose(125.000, 60.000),
-
+                            new BezierCurve(
+                                    new Pose(130.000, 60.000),
+                                    new Pose(100.000, 60.000),
                                     new Pose(123.800, 122.600)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(37))
 
                     .build();
+
+            prePickUp3 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(123.800, 122.600),
+
+                                    new Pose(90.000, 36.000)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(37), Math.toRadians(0))
+
+                    .build();
+
+            pickUp3 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(90.000, 36.000),
+
+                                    new Pose(130.000, 36.000)
+                            )
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+
+                    .build();
         }
     }
+
+
+
+
 
     public void autonomousPathUpdate() {
         switch (pathState) {
@@ -104,19 +135,20 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
             case 1:
                 // Wait for launch sequence to complete
                 if (scoringMotors.updateLaunchSequence()) {
-                    follower.followPath(paths.prePickup1);
+                    follower.followPath(paths.prePickUp1);
                     setPathState(2);
                 }
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                    follower.followPath(paths.pickUp1, true);
+                    scoringMotors.intakeBalls();
+                    follower.followPath(paths.pickUp1, 0.75, true);
                     setPathState(3);
                 }
                 break;
             case 3:
                 if(!follower.isBusy()) {
-                    /* Got sample, go to launch */
+                    scoringMotors.stop();
                     follower.followPath(paths.launch2, true);
                     setPathState(4);
                 }
@@ -137,12 +169,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                 break;
             case 6:
                 if(!follower.isBusy()) {
-                    follower.followPath(paths.pickUp2, true);
+                    scoringMotors.intakeBalls();
+                    follower.followPath(paths.pickUp2, 0.75, true);
                     setPathState(7);
                 }
                 break;
             case 7:
                 if(!follower.isBusy()) {
+                    scoringMotors.stop();
                     follower.followPath(paths.launch3, true);
                     setPathState(8);
                 }
@@ -157,9 +191,29 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
             case 9:
                 // Wait for launch sequence to complete
                 if (scoringMotors.updateLaunchSequence()) {
-                    setPathState(-1); // Done
+                    setPathState(10); // Done
                 }
                 break;
+            case 10:
+                if(!follower.isBusy()) {
+                    scoringMotors.stop();
+                    follower.followPath(paths.prePickUp3, true);
+                    setPathState(11);
+                }
+                break;
+            case 11:
+                if(!follower.isBusy()) {
+                    scoringMotors.intakeBalls();
+                    follower.followPath(paths.pickUp3, true);
+                    setPathState(12);
+                }
+                break;
+            case 12:
+            if(!follower.isBusy()) {
+                scoringMotors.stop();
+                setPathState(-1);
+            }
+            break;
         }
     }
 
@@ -174,7 +228,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
         // These loop the movements of the robot, these must be called continuously in order to work
         follower.update();
         autonomousPathUpdate();
-        draw();
 
         // Feedback to Driver Hub for debugging
         telemetry.addData("path state", pathState);
@@ -190,6 +243,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
+        actionTimer = new Timer();
 
         scoringMotors = new ScoringMotors(hardwareMap);
 
