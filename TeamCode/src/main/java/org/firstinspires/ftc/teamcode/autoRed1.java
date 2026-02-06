@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode; // make sure this aligns with class location
 
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
@@ -172,6 +174,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
         // These loop the movements of the robot, these must be called continuously in order to work
         follower.update();
         autonomousPathUpdate();
+        draw();
 
         // Feedback to Driver Hub for debugging
         telemetry.addData("path state", pathState);

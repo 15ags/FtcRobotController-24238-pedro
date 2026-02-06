@@ -32,7 +32,6 @@ public class teleop extends OpMode
     private Limelight3A limelight;
     private IMU imu;
     boolean inZoneAuto = false;
-    private final Pose startPose = new Pose(123.8, 122.6, Math.toRadians(37));
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -49,10 +48,11 @@ public class teleop extends OpMode
         imu = hardwareMap.get(IMU.class, "imu");
         RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP);
-        // Tell the driver that initialization is complete.
+
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
+        telemetryM.addLine("initialized");
     }
 
     /*
@@ -111,19 +111,9 @@ public class teleop extends OpMode
             scoringMotors.scoringMotorsTele(gamepad2);
         }
 
-        //follower.update();
-        //draw();
-
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("LaunchSpeed", scoringMotors.getLaunchVel());
         telemetry.addData("LaunchError", scoringMotors.getLaunchVel()- scoringMotors.getTargetLaunchVel());
-
-        //telemetryM.debug("x:" + follower.getPose().getX());
-        //telemetryM.debug("y:" + follower.getPose().getY());
-        //telemetryM.debug("heading:" + follower.getPose().getHeading());
-        //telemetryM.debug("total heading:" + follower.getTotalHeading());
-        //telemetryM.debug("position", follower.getPose());
-        //telemetryM.debug("velocity", follower.getVelocity());
         telemetryM.debug("Status", "Run Time: " + runtime.toString());
         telemetryM.debug("LaunchSpeed", scoringMotors.getLaunchVel());
         telemetryM.debug("LaunchError", scoringMotors.getLaunchVel()- scoringMotors.getTargetLaunchVel());
