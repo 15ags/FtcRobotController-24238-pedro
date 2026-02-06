@@ -3,12 +3,19 @@ package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
 
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.hardware.DriveBase;
 import org.firstinspires.ftc.teamcode.hardware.ScoringMotors;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -22,24 +29,30 @@ public class teleop extends OpMode
     private ScoringMotors scoringMotors;
     //public static Follower follower;
     static TelemetryManager telemetryM;
+    private Limelight3A limelight;
+    private IMU imu;
+    boolean inZoneAuto = false;
     private final Pose startPose = new Pose(123.8, 122.6, Math.toRadians(37));
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-
-       // follower = Constants.createFollower(hardwareMap);
-       // follower.setStartingPose(startPose);
-
-
         driveBase = new DriveBase(hardwareMap);
 
         scoringMotors = new ScoringMotors(hardwareMap);
 
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.setPollRateHz(100);
+        limelight.pipelineSwitch(0);
+        limelight.start();
+        imu = hardwareMap.get(IMU.class, "imu");
+        RevHubOrientationOnRobot revHubOrientationOnRobot = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP);
         // Tell the driver that initialization is complete.
-        telemetry.addData("Status", "Initialized");
+
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        imu.initialize(new IMU.Parameters(revHubOrientationOnRobot));
     }
 
     /*
@@ -62,8 +75,41 @@ public class teleop extends OpMode
      */
     @Override
     public void loop() {
+        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+        limelight.updateRobotOrientation(orientation.getYaw());
+        LLResult llResult = limelight.getLatestResult();
+        boolean driverIdle = Math.abs(gamepad2.left_stick_y) < 0.1;
+
         driveBase.baseTele(gamepad1);
-        scoringMotors.scoringMotorsTele(gamepad2);
+        if (!driverIdle) {
+            scoringMotors.scoringMotorsTele(gamepad2);
+        }
+
+        if (llResult != null && llResult.isValid()) {
+            Pose3D botPose_mt2 = llResult.getBotpose_MT2();
+            telemetryM.addData("Tx", llResult.getTx());
+            telemetryM.addData("Ty", llResult.getTy());
+            telemetryM.addData("Ta", llResult.getTa());
+            if (botPose_mt2 != null) {
+                double x = botPose_mt2.getPosition().x;
+                double y = botPose_mt2.getPosition().y;
+                telemetry.addData("MT2 Location:", "(" + x + ", " + y + ")");
+                boolean inRedZone = x > 2.4 && y > 2.4;
+                boolean inBlueZone = x > 2.4 && y > 1.2;
+
+                if ((inRedZone||inBlueZone) && driverIdle && !inZoneAuto) {
+                    scoringMotors.preLaunch();
+                    inZoneAuto = true;
+                }
+
+                if (((!inRedZone&&!inBlueZone) || !driverIdle) && inZoneAuto) {
+                    inZoneAuto = false;
+                }
+            }
+        } else {
+            inZoneAuto = false;
+            scoringMotors.scoringMotorsTele(gamepad2);
+        }
 
         //follower.update();
         //draw();
