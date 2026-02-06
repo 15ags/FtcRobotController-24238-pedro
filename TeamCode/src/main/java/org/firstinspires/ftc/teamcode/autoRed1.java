@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
 
+
     public static class Paths {
         public PathChain prePickUp1;
         public PathChain pickUp1;
@@ -83,7 +84,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                             new BezierLine(
                                     new Pose(90.000, 60.000),
 
-                                    new Pose(130.000, 60.000)
+                                    new Pose(134.000, 60.000)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
 
@@ -91,7 +92,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
             launch3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(130.000, 60.000),
+                                    new Pose(134.000, 60.000),
                                     new Pose(100.000, 60.000),
                                     new Pose(123.800, 122.600)
                             )
@@ -113,13 +114,14 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
                             new BezierLine(
                                     new Pose(90.000, 36.000),
 
-                                    new Pose(130.000, 36.000)
+                                    new Pose(134.000, 36.000)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
 
                     .build();
         }
     }
+
 
 
 

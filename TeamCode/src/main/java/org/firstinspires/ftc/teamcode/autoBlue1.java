@@ -27,6 +27,7 @@ public class autoBlue1 extends OpMode {
 
 
 
+
     public static class Paths {
         public PathChain prePickUp1;
         public PathChain pickUp1;
@@ -82,7 +83,7 @@ public class autoBlue1 extends OpMode {
                             new BezierLine(
                                     new Pose(54.000, 60.000),
 
-                                    new Pose(14.000, 60.000)
+                                    new Pose(10.000, 60.000)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
 
@@ -90,7 +91,7 @@ public class autoBlue1 extends OpMode {
 
             launch3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(14.000, 60.000),
+                                    new Pose(10.000, 60.000),
                                     new Pose(44.000, 60.000),
                                     new Pose(20.200, 122.600)
                             )
@@ -104,7 +105,7 @@ public class autoBlue1 extends OpMode {
 
                                     new Pose(54.000, 36.000)
                             )
-                    ).setTangentHeadingInterpolation()
+                    ).setLinearHeadingInterpolation(Math.toRadians(144), Math.toRadians(180))
 
                     .build();
 
@@ -112,15 +113,13 @@ public class autoBlue1 extends OpMode {
                             new BezierLine(
                                     new Pose(54.000, 36.000),
 
-                                    new Pose(14.000, 36.000)
+                                    new Pose(10.000, 36.000)
                             )
-                    ).setTangentHeadingInterpolation()
+                    ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
 
                     .build();
         }
     }
-
-
 
     public void autonomousPathUpdate() {
         switch (pathState) {
