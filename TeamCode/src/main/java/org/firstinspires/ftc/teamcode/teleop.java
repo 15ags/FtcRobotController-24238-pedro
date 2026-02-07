@@ -79,30 +79,26 @@ public class teleop extends OpMode
         }
 
         if (llResult != null && llResult.isValid()) {
-            Pose3D botPose = llResult.getBotpose();
             telemetryM.addData("Tx", llResult.getTx());
             telemetryM.addData("Ty", llResult.getTy());
             telemetryM.addData("Ta", llResult.getTa());
-            if (botPose != null) {
-                double x = botPose.getPosition().x;
-                double y = botPose.getPosition().y;
-                telemetry.addData("MT1 Location:", "(" + x + ", " + y + ")");
-                boolean inRedZone = x > 1.8 && y > 1.8;
-                boolean inBlueZone = x < 1.8 && y > 1.8;
 
-                if ((inRedZone||inBlueZone) && driverIdle && !inZoneAuto) {
-                    scoringMotors.preLaunch();
-                    inZoneAuto = true;
-                }
+            boolean seesTag = llResult.isValid(); // or llResult.hasTargets()
 
-                if (((!inRedZone&&!inBlueZone) || !driverIdle) && inZoneAuto) {
-                    inZoneAuto = false;
-                }
+            if (seesTag && driverIdle && !inZoneAuto) {
+                scoringMotors.preLaunch();
+                inZoneAuto = true;
             }
+
+            if ((!seesTag || !driverIdle) && inZoneAuto) {
+                inZoneAuto = false;
+            }
+
         } else {
             inZoneAuto = false;
             scoringMotors.scoringMotorsTele(gamepad2);
         }
+
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("LaunchSpeed", scoringMotors.getLaunchVel());

@@ -15,7 +15,7 @@ public class ScoringMotors {
     private double targetLaunchVel = 0;
     private int launchState = 0;
     private ElapsedTime launchTimer = new ElapsedTime();
-    public static final double middleMax = 2500;
+    public static final double middleMax = 1750;
     public static final double intakeV = 2500;
     public static final double maxLaunchVelocity = 1050;
     public static final double launchDelay = 1.2;
@@ -79,7 +79,7 @@ public class ScoringMotors {
                 return false;
             case 1:
                 if (launchTimer.seconds() > launchDelay) {
-                    middle.setVelocity(-2000);
+                    middle.setVelocity(-middleMax);
                     launchTimer.reset();
                     launchState=2;
                     return false;
