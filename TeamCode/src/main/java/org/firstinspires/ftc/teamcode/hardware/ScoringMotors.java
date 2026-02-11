@@ -15,9 +15,9 @@ public class ScoringMotors {
     private double targetLaunchVel = 0;
     private int launchState = 0;
     private ElapsedTime launchTimer = new ElapsedTime();
-    public static final double middleMax = 1750;
+    public static final double middleMax = 2500;
     public static final double intakeV = 2500;
-    public static final double maxLaunchVelocity = 1050;
+    public static final double maxLaunchVelocity = 1075;
     public static final double launchDelay = 1.2;
     public static final double middleDelay = 0.5;
     public static final double stopDelay = 0.8;
@@ -113,8 +113,12 @@ public class ScoringMotors {
 
     public void intakeBalls() {
         intake.setVelocity(3000);
-        middle.setVelocity(-800);
+        middle.setVelocity(-650);
         launch.setVelocity(1100);
+    }
+
+    public void middlePreLaunch() {
+        middle.setVelocity(300);
     }
     public void stop() {
         launch.setVelocity(0);

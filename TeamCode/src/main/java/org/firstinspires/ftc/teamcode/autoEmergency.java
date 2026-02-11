@@ -60,7 +60,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="autoEmergency", group="Robot")
+@Autonomous(name="autoSoloAvanzar", group="Robot")
 public class autoEmergency extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -106,8 +106,8 @@ public class autoEmergency extends LinearOpMode {
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         LBMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        RBMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        LFMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        RBMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        LFMotor.setDirection(DcMotorEx.Direction.REVERSE);
         RFMotor.setDirection(DcMotorEx.Direction.REVERSE);
 
         // Directions for the throwing motors
@@ -166,15 +166,7 @@ public class autoEmergency extends LinearOpMode {
 
 
 
-        Launch.setPower(0.8);
-        waitS(1);
-        middle.setPower(0.7);
-        waitS(1);
-        intake.setPower(0.7);
-        waitS(1);
-        intake.setPower(0);
-        middle.setPower(0);
-        Launch.setPower(0);
+        encoderDrive(0.5, 40, 0, 0,5);
 
 
 

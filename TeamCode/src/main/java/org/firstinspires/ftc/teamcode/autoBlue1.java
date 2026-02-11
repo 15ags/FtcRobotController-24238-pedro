@@ -28,6 +28,8 @@ public class autoBlue1 extends OpMode {
 
 
 
+
+
     public static class Paths {
         public PathChain prePickUp1;
         public PathChain pickUp1;
@@ -83,7 +85,7 @@ public class autoBlue1 extends OpMode {
                             new BezierLine(
                                     new Pose(54.000, 60.000),
 
-                                    new Pose(10.000, 60.000)
+                                    new Pose(11.000, 60.000)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
 
@@ -91,7 +93,7 @@ public class autoBlue1 extends OpMode {
 
             launch3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(10.000, 60.000),
+                                    new Pose(11.000, 60.000),
                                     new Pose(44.000, 60.000),
                                     new Pose(20.200, 122.600)
                             )
@@ -113,13 +115,14 @@ public class autoBlue1 extends OpMode {
                             new BezierLine(
                                     new Pose(54.000, 36.000),
 
-                                    new Pose(10.000, 36.000)
+                                    new Pose(11.000, 36.000)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
 
                     .build();
         }
     }
+
 
     public void autonomousPathUpdate() {
         switch (pathState) {
@@ -145,6 +148,7 @@ public class autoBlue1 extends OpMode {
             case 3:
                 if(!follower.isBusy()) {
                     scoringMotors.stop();
+                    scoringMotors.middlePreLaunch();
                     follower.followPath(paths.launch2, true);
                     setPathState(4);
                 }
@@ -152,6 +156,7 @@ public class autoBlue1 extends OpMode {
             case 4:
                 if(!follower.isBusy()) {
                     /* Start launch sequence */
+                    scoringMotors.stop();
                     scoringMotors.startLaunchSequence();
                     setPathState(5);
                 }
@@ -173,6 +178,7 @@ public class autoBlue1 extends OpMode {
             case 7:
                 if(!follower.isBusy()) {
                     scoringMotors.stop();
+                    scoringMotors.middlePreLaunch();
                     follower.followPath(paths.launch3, true);
                     setPathState(8);
                 }
@@ -180,6 +186,7 @@ public class autoBlue1 extends OpMode {
             case 8:
                 if(!follower.isBusy()) {
                     /* Start final launch sequence */
+                    scoringMotors.stop();
                     scoringMotors.startLaunchSequence();
                     setPathState(9);
                 }
