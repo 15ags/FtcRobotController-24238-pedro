@@ -3,21 +3,18 @@ package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
 
 import com.pedropathing.geometry.Pose;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.hardware.DriveBase;
 import org.firstinspires.ftc.teamcode.hardware.ScoringMotors;
+import org.firstinspires.ftc.teamcode.hardware.Limelight;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @TeleOp(name="teleop", group="Iterative OpMode")
@@ -27,9 +24,8 @@ public class teleop extends OpMode
     private ElapsedTime runtime = new ElapsedTime();
     private DriveBase driveBase;
     private ScoringMotors scoringMotors;
+    private Limelight limelight;
     static TelemetryManager telemetryM;
-    private Limelight3A limelight;
-    boolean inZoneAuto = false;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -39,11 +35,7 @@ public class teleop extends OpMode
 
         scoringMotors = new ScoringMotors(hardwareMap);
 
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.setPollRateHz(100);
-        limelight.pipelineSwitch(0);
-        limelight.start();
-
+        limelight = new Limelight(hardwareMap);
 
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
@@ -70,7 +62,6 @@ public class teleop extends OpMode
      */
     @Override
     public void loop() {
-        LLResult llResult = limelight.getLatestResult();
         boolean driverIdle = Math.abs(gamepad2.left_stick_y) < 0.1;
 
         driveBase.baseTele(gamepad1);
@@ -78,24 +69,17 @@ public class teleop extends OpMode
             scoringMotors.scoringMotorsTele(gamepad2);
         }
 
-        if (llResult != null && llResult.isValid()) {
-            telemetryM.addData("Tx", llResult.getTx());
-            telemetryM.addData("Ty", llResult.getTy());
-            telemetryM.addData("Ta", llResult.getTa());
+        limelight.checkAndSetAuto(driverIdle);
 
-            boolean seesTag = llResult.isValid(); // or llResult.hasTargets()
+        if (limelight.isValid()) {
+            telemetryM.addData("Tx", limelight.getTx());
+            telemetryM.addData("Ty", limelight.getTy());
+            telemetryM.addData("Ta", limelight.getTa());
 
-            if (seesTag && driverIdle && !inZoneAuto) {
+            if (limelight.inZoneAuto) {
                 scoringMotors.preLaunch();
-                inZoneAuto = true;
             }
-
-            if ((!seesTag || !driverIdle) && inZoneAuto) {
-                inZoneAuto = false;
-            }
-
         } else {
-            inZoneAuto = false;
             scoringMotors.scoringMotorsTele(gamepad2);
         }
 
