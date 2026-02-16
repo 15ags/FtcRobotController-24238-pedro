@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
 
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -69,14 +71,14 @@ public class teleop extends OpMode
             scoringMotors.scoringMotorsTele(gamepad2);
         }
 
-        limelight.checkAndSetAuto(driverIdle);
+        limelight.update(driverIdle);
 
         if (limelight.isValid()) {
             telemetryM.addData("Tx", limelight.getTx());
             telemetryM.addData("Ty", limelight.getTy());
             telemetryM.addData("Ta", limelight.getTa());
 
-            if (limelight.inZoneAuto) {
+            if (limelight.isAutoActive()) {
                 scoringMotors.preLaunch();
             }
         } else {

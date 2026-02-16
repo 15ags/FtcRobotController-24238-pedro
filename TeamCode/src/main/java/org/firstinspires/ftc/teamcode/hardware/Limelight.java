@@ -47,10 +47,12 @@ public class Limelight {
         inZoneAuto = isValid() && inZoneAuto && driverIdle;
     }
 
-    public void checkAndSetAuto(boolean driverIdle) {
-        if (isValid() && driverIdle && !inZoneAuto) {
-            inZoneAuto = true;
-        }
+    public void startAuto() {
+        inZoneAuto = true;
+    }
+
+    public boolean isAutoActive() {
+        return inZoneAuto;
     }
 
     public void stop() {
