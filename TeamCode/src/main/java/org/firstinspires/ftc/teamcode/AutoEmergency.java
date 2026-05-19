@@ -61,7 +61,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="autoSoloAvanzar", group="Robot")
-public class autoEmergency extends LinearOpMode {
+public class AutoEmergency extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();

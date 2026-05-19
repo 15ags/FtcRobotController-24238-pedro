@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode; // make sure this aligns with class location
 
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
-
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
@@ -16,7 +14,7 @@ import org.firstinspires.ftc.teamcode.hardware.ScoringMotors;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @Autonomous(name = "autoRed1", group = "Examples")
- public class autoRed1 extends OpMode {
+ public class AutoRed1 extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
